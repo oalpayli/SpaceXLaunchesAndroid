@@ -1,161 +1,107 @@
 apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-platform-android'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
-apply from: rootDir.absolutePath + '/base_lib.gradle'
-apply from: rootDir.absolutePath + '/utils.gradle'
-
-apply plugin: 'kotlin-allopen'
-apply plugin: 'kotlin-android'
-
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
-    }
-}
-allOpen {
-    annotation 'com.ceng.ozi.data.utils.OpenClass'
-}
-
-enableJacoco(project, 'Debug')
-
-/*def keystorePropertiesFile = rootProject.file("keystore.properties")
-def keystoreProperties = new Properties()
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-}*/
-
 android {
-
-    /*signingConfigs {
-        if (keystorePropertiesFile.exists()) {
-            releaseConfig {
-                keyAlias keystoreProperties['keyAlias']
-                keyPassword keystoreProperties['keyPassword']
-                storeFile rootProject.file(keystoreProperties['storeFile'])
-                storePassword keystoreProperties['storePassword']
-            }
-        }
-    }*/
-
+    compileSdkVersion 28
     defaultConfig {
-        buildConfigField 'String', 'BASE_API_URL', getString(BASE_API_URL)
-        applicationId "com.ceng.ozi.spacexlaunchesandroid"
-        //testInstrumentationRunner "com.ceng.ozi.spacexlaunchesandroid.utils.TestAppRunner"
+        applicationId "com.ceng.ozi"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-    dataBinding {
-        enabled = true
-    }
-    testOptions {
-        animationsDisabled true
-        unitTests {
-            includeAndroidResources = true
-        }
-    }
-    sourceSets {
-        String sharedTestDir = 'src/sharedTest/kotlin'
-        String sharedTestResDir = 'src/sharedTest/res'
-        test.java.srcDirs += sharedTestDir
-
-        androidTest.java.srcDirs += sharedTestDir
-        androidTest.res.srcDirs += sharedTestResDir
+    kapt {
+        mapDiagnosticLocations = true
     }
     buildTypes {
         release {
-            /*if (keystorePropertiesFile.exists()) {
-                signingConfig signingConfigs.releaseConfig
-            }*/
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
         }
     }
 }
 
+ext {
+    supportVersion = "27.1.0"
+    fabVersion = "1.6.4"
+    daggerVersion = "2.15"
+    retrofitVersion = "2.3.0"
+    mockitoVersion = "1.10.19"
+    okHttpVersion = "3.10.0"
+    rxJavaVersion = "2.1.10"
+    rxAndroidVersion = "2.1.0"
+    glideVersion = "4.7.1"
+    espressoVersion = "3.0.1"
+    dexter = "4.2.0"
+    rxVersion = "1.6"
+    versions = [
+            'ffmpeg': '3.2.1-1.3'
+    ]
+}
+
 dependencies {
-    implementation project(':data')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
-    //implementation project(':domain')
+    // TEST
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    //implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "androidx.appcompat:appcompat:$supportLibraryVersion"
-    implementation "com.google.android.material:material:$supportLibraryVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycleVersion"
+    // Google
+    implementation 'com.google.android.material:material:1.1.0-alpha01'
+    implementation 'com.android.support:support-v4:28.0.0'
 
-    // ViewModel and LiveData
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
 
-    // alternately - if using Java8, use the following instead of lifecycle-compiler
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+    // AndroidX
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout-solver:1.1.3'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.0.0'
+    implementation 'androidx.core:core:1.0.1'
 
-    // optional - ReactiveStreams support for LiveData
-    implementation "androidx.lifecycle:lifecycle-reactivestreams:$lifecycleVersion"
+    // Fab
+    implementation "com.github.clans:fab:$fabVersion"
 
-    // use -ktx for Kotlin
-    implementation "android.arch.work:work-runtime:$work_version"
-    implementation "androidx.paging:paging-runtime:$lifecycleVersion"
+    // Permission
+    implementation "com.karumi:dexter:$dexter"
 
-    // Spring animation
-    implementation "androidx.dynamicanimation:dynamicanimation:$supportLibraryVersion"
-
-    //Dagger
+    // Dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-    implementation "com.google.dagger:dagger-android:$daggerVersion"
-    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
-    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
-    // LOGGING
-    implementation "com.jakewharton.timber:timber:$timberVersion"
 
-    // NETWORKING
+    // Database
+    implementation "android.arch.persistence.room:runtime:1.1.1"
+    implementation "android.arch.persistence.room:rxjava2:1.1.1"
+    kapt "android.arch.persistence.room:compiler:1.1.1"
+
+
+    // Networking
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+    implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
 
-    // Memory Leaking
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    // Rx
+    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
+    implementation "nl.littlerobots.rxlint:rxlint:$rxVersion"
 
-    //Tests
-    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
-    testImplementation "androidx.arch.core:core-testing:$lifecycleVersion"
-    testImplementation "org.amshove.kluent:kluent:$kluentVersion"
-    kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
-    androidTestImplementation "android.arch.work:work-testing:$work_version"
-    androidTestImplementation "androidx.test:rules:$runnerVersion"
-    androidTestImplementation "androidx.test:runner:$runnerVersion"
-    androidTestImplementation "org.mockito:mockito-android:$mockitoAndroidVersion"
-    androidTestImplementation "com.nhaarman:mockito-kotlin:$mockitoKotlinVersion"
-    androidTestImplementation "com.squareup.okhttp3:mockwebserver:$okHttpVersion"
-    androidTestImplementation "android.arch.navigation:navigation-testing-ktx:$navigationVersion"
-    androidTestImplementation project(path: ':domain', configuration: 'testOutput')
-    androidTestImplementation "androidx.arch.core:core-testing:$lifecycleVersion"
-    androidTestImplementation "com.google.dagger:dagger:$daggerVersion"
-    androidTestImplementation "com.github.fabioCollini.daggermock:daggermock-kotlin:$daggerMockVersion"
+    // Image Cache
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
 
-    /*kapt rootProject.ext.daggerCompiler
-        implementation rootProject.ext.dagger
-        implementation rootProject.ext.rxJava
-        implementation rootProject.ext.retrofit
-        implementation rootProject.ext.retrofitGsonConverter
-        implementation rootProject.ext.retrofitRxJava2Adapter
-        implementation rootProject.ext.room
+    // Debugging
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
 
-        implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
-        implementation "android.arch.lifecycle:extensions:1.1.1"
-        implementation 'com.squareup.picasso:picasso:2.5.2'
-        implementation 'co.lujun:androidtagview:1.1.4'
-        debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
-        releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
-
-        testImplementation rootProject.ext.junit
-        testImplementation rootProject.ext.mockito
-        androidTestImplementation rootProject.ext.androidTestRunner
-        androidTestImplementation 'org.mockito:mockito-android:2.8.47'
-        androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'*/
 }
