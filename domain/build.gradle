@@ -20,7 +20,7 @@ buildscript {
 }
 
 allOpen {
-    annotation 'com.yolline.app.domain.utils.OpenClass'
+    annotation 'com.ceng.ozi.domain.utils.OpenClass'
 }
 
 sourceSets {
