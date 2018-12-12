@@ -14,5 +14,4 @@ abstract class AppDatabase : RoomDatabase(){
 
     abstract fun launchDao() : LaunchDao
 
-
 }
