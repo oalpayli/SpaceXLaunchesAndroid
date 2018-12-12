@@ -18,7 +18,7 @@ buildscript {
     }
 }
 allOpen {
-    annotation 'com.verimar.tupras.data.utils.OpenClass'
+    annotation 'com.ceng.ozi.data.utils.OpenClass'
 }
 
 enableJacoco(project, 'Debug')
@@ -44,8 +44,8 @@ android {
 
     defaultConfig {
         buildConfigField 'String', 'BASE_API_URL', getString(BASE_API_URL)
-        applicationId "com.yolline.app"
-        //testInstrumentationRunner "com.yolline.app.utils.TestAppRunner"
+        applicationId "com.ceng.ozi.spacexlaunchesandroid"
+        //testInstrumentationRunner "com.ceng.ozi.spacexlaunchesandroid.utils.TestAppRunner"
     }
     dataBinding {
         enabled = true
