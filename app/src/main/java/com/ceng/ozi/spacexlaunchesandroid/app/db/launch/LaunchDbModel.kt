@@ -35,10 +35,10 @@ data class LaunchDbModel (
     val launchDateUnix: Long?,
 
     @SerializedName("launch_date_utc")
-    val launchDateUtc: Long?,
+    val launchDateUtc: String?,
 
     @SerializedName("launch_date_local")
-    val launchDateLocal: Long?,
+    val launchDateLocal: String?,
 
     @SerializedName("is_tentative")
     val isTentative: Boolean?,
@@ -50,7 +50,7 @@ data class LaunchDbModel (
     val tbd: Boolean?,
 
     @TypeConverters(DynamicTypeConverter::class)
-    var ships: List<String>?,
+    val ships: List<String>?,
 
     @Embedded
     val reuse: ReuseModel?,

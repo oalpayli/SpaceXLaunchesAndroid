@@ -2,10 +2,12 @@ package com.ceng.ozi.spacexlaunchesandroid.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceng.ozi.spacexlaunchesandroid.R
 import com.ceng.ozi.spacexlaunchesandroid.app.SpaceXLaunchesApplication
 import com.ceng.ozi.spacexlaunchesandroid.app.db.launch.LaunchDbModel
 import com.ceng.ozi.spacexlaunchesandroid.presenter.MainPresenter
+import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainPresenter.MainView {
@@ -33,7 +35,7 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
     override fun onStart() {
         super.onStart()
 
-        presenter.getLaunchesFromNetwork()
+        presenter.getLaunches()
     }
 
     override fun onDestroy() {
@@ -45,11 +47,11 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
     // region OVERRIDES
 
     override fun initUi() {
-
+        recyclerView_MainActivity.layoutManager = LinearLayoutManager(this)
     }
 
     override fun showLaunches(launches: MutableList<LaunchDbModel>) {
-
+        textView_MainActivity.text = "$launches"
     }
 
     override fun loading() {

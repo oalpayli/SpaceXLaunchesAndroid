@@ -48,7 +48,7 @@ open class MainPresenter @Inject constructor(private val rxThread: RxThread,
 
     // region Api Call
 
-    fun getLaunchesFromNetwork(){
+    private fun getLaunchesFromNetwork(){
         subscription.add(api.getLaunches()
             .compose(rxThread.applySync())
             .subscribe({
