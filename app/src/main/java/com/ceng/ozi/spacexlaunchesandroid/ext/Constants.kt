@@ -14,6 +14,11 @@ object Constants {
     // endregion
 
 
+    // region FILTER KEYS
+
+    const val RAW_PRE_QUERY_FOR_Launches_FILTER = "SELECT * FROM Launch WHERE "
+
+    // endregion
 
 
 }

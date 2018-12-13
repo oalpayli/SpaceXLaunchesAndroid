@@ -6,9 +6,11 @@ import com.ceng.ozi.spacexlaunchesandroid.app.api.ServiceAPI
 import com.ceng.ozi.spacexlaunchesandroid.app.db.launch.LaunchDbModel
 import com.ceng.ozi.spacexlaunchesandroid.app.db.launch.LaunchDao
 import com.ceng.ozi.spacexlaunchesandroid.ext.RxThread
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.math.sin
 
 /**
  * Created by oguzhanalpayli on 12,December,2018
@@ -98,6 +100,46 @@ open class MainPresenter @Inject constructor(private val rxThread: RxThread,
 
     private fun insertAllLaunches(launches: List<LaunchDbModel>){
         launchDao.insertLaunches(launches.toList())
+    }
+
+    fun filter(selectedIndex: Int) {
+
+        var single: Single<MutableList<LaunchDbModel>>? = null
+
+        when(selectedIndex){
+
+            0 -> {
+                single = launchDao.filterByAscYear()
+            }
+
+            1 -> {
+                single = launchDao.filterByDescYear()
+            }
+
+            2 -> {
+                single = launchDao.filterByAscOrder()
+            }
+
+            3 -> {
+                single = launchDao.filterByDescOrder()
+            }
+
+        }
+
+        subscription.add(single!!
+            .compose(rxThread.applySyncSingle())
+            .subscribe({
+                view.dismissLoading()
+
+                view.showLaunches(it.toMutableList())
+
+            }, {
+                view.dismissLoading()
+
+                view.showErrorMessage(it.message)
+
+            }))
+
     }
 
     // endregion

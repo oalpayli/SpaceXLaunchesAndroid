@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.ceng.ozi.spacexlaunchesandroid.R
 import com.ceng.ozi.spacexlaunchesandroid.app.db.launch.LaunchDbModel
+import com.ceng.ozi.spacexlaunchesandroid.ext.Utility
 import kotlinx.android.synthetic.main.recyclerview_launch_row_item.view.*
 
 /**
@@ -34,7 +35,7 @@ class MainAdapter(val context: Context) : RecyclerView.Adapter<MainAdapter.MainV
         val model = launches[position]
 
         holder.tvMissionName.text = model.missionName!!
-        holder.tvLaunchDate.text = model.launchDateUtc
+        holder.tvLaunchDate.text = Utility.currentUnixToStringDate(model.launchDateUnix!!)
 
         if (model.launchSuccess){
             holder.ivSuccessOrFailed.setImageResource(R.drawable.ic_success)

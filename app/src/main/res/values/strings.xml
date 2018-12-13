@@ -3,4 +3,18 @@
 
     <string name="base_url">https://api.spacexdata.com/</string>
 
+    <string name="dialog_cancel_button_text">Cancel</string>
+    <string name="dialog_ok_button_text">OK</string>
+    <string name="dialog_apply_button_text">Apply</string>
+
+    <string name="filter_list_dialog_title">Filter</string>
+
+
+    <string-array name="filter_list">
+        <item>By Year Asc</item>
+        <item>By Year Desc</item>
+        <item>By Order Asc</item>
+        <item>By Order Desc</item>
+    </string-array>
+
 </resources>
