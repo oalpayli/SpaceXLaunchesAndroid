@@ -1,8 +1,11 @@
 package com.ceng.ozi.spacexlaunchesandroid.activities
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.DialogAction
@@ -101,6 +104,11 @@ class MainActivity : BaseActivity(), MainPresenter.MainView, ItemClickSupport.On
     // region OVERRIDES
 
     override fun initUi() {
+        ImageViewCompat.setImageTintList(
+            fabfilter_MainActivity,
+            ColorStateList.valueOf(Color.WHITE)
+        )
+
         recyclerView_MainActivity.layoutManager = LinearLayoutManager(this)
         adapter = MainAdapter(this)
         recyclerView_MainActivity.adapter = adapter
