@@ -14,7 +14,11 @@ open class BasePresenter {
         fun loading()
         fun loading(message: String?)
         fun dismissLoading()
-        fun showErrorMessage()
+        fun showErrorMessage(message: String?)
+    }
+
+    companion object {
+        const val DELAY_TIME: Long = 2
     }
 
     var mContext: Context? = null

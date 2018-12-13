@@ -1,9 +1,11 @@
 package com.ceng.ozi.spacexlaunchesandroid.activities
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceng.ozi.spacexlaunchesandroid.R
+import com.ceng.ozi.spacexlaunchesandroid.adapter.MainAdapter
 import com.ceng.ozi.spacexlaunchesandroid.app.SpaceXLaunchesApplication
 import com.ceng.ozi.spacexlaunchesandroid.app.db.launch.LaunchDbModel
 import com.ceng.ozi.spacexlaunchesandroid.presenter.MainPresenter
@@ -23,6 +25,7 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
      * */
     @Inject
     lateinit var presenter: MainPresenter
+    private var adapter: MainAdapter? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +33,7 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
         (application as SpaceXLaunchesApplication).component.inject(this)
         setContentView(R.layout.activity_main)
         presenter.injectView(this, this)
+        initUi()
     }
 
     override fun onStart() {
@@ -48,14 +52,19 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
 
     override fun initUi() {
         recyclerView_MainActivity.layoutManager = LinearLayoutManager(this)
+        adapter = MainAdapter(this)
+        recyclerView_MainActivity.adapter = adapter
     }
 
     override fun showLaunches(launches: MutableList<LaunchDbModel>) {
-        textView_MainActivity.text = "$launches"
+        recyclerView_MainActivity.visibility = View.VISIBLE
+        adapter!!.addItems(launches)
     }
 
     override fun loading() {
-
+        progressBar_MainActivity.visibility = View.VISIBLE
+        recyclerView_MainActivity.visibility = View.GONE
+        textView_MainActivity.visibility = View.GONE
     }
 
     override fun loading(message: String?) {
@@ -63,11 +72,14 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
     }
 
     override fun dismissLoading() {
-
+        progressBar_MainActivity.visibility = View.GONE
     }
 
-    override fun showErrorMessage() {
+    override fun showErrorMessage(message: String?) {
+        textView_MainActivity.visibility = View.VISIBLE
+        recyclerView_MainActivity.visibility = View.GONE
 
+        textView_MainActivity.text = message!!
     }
 
     // endregion

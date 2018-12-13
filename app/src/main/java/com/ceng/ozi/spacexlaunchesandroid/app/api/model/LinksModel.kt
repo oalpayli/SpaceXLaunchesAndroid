@@ -8,18 +8,18 @@ import com.google.gson.annotations.SerializedName
 data class LinksModel(
 
     @SerializedName("mission_patch")
-    val missionPatch: String?,
+    val missionPatch: String = "",
 
     @SerializedName("mission_patch_small")
-    val missionPatchSmall: String?,
+    val missionPatchSmall: String = "",
 
     @SerializedName("article_link")
-    val articleLink: String?,
+    val articleLink: String = "",
 
     @SerializedName("wikipedia")
-    val wikipedia: String?,
+    val wikipedia: String = "",
 
     @SerializedName("video_link")
-    val videoLink: String?
+    val videoLink: String = ""
 
 )

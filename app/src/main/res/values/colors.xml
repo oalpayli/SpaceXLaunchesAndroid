@@ -8,5 +8,6 @@
     <color name="white">@android:color/white</color>
     <color name="transparent">@android:color/transparent</color>
     <color name="black">@android:color/black</color>
+    <color name="windowBackground">#f1f4f7</color>
 
 </resources>

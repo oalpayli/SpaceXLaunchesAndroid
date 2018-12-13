@@ -6,6 +6,8 @@ import com.ceng.ozi.spacexlaunchesandroid.app.api.ServiceAPI
 import com.ceng.ozi.spacexlaunchesandroid.app.db.launch.LaunchDbModel
 import com.ceng.ozi.spacexlaunchesandroid.app.db.launch.LaunchDao
 import com.ceng.ozi.spacexlaunchesandroid.ext.RxThread
+import io.reactivex.android.schedulers.AndroidSchedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -49,17 +51,23 @@ open class MainPresenter @Inject constructor(private val rxThread: RxThread,
     // region Api Call
 
     private fun getLaunchesFromNetwork(){
+        view.loading()
+
         subscription.add(api.getLaunches()
             .compose(rxThread.applySync())
+            .delay(DELAY_TIME, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
             .subscribe({
+
+                view.dismissLoading()
 
                 insertAllLaunches(it)
                 view.showLaunches(it.toMutableList())
 
             }, {
 
-                // TODO
-                Log.e("ozi", it.message)
+                view.dismissLoading()
+
+                view.showErrorMessage(it.message)
 
             }))
     }
@@ -70,16 +78,20 @@ open class MainPresenter @Inject constructor(private val rxThread: RxThread,
     // region DB
 
     private fun getLaunchesFromDb(){
+        view.loading()
+
         subscription.add(launchDao.findAllLaunch()
             .compose(rxThread.applySyncSingle())
+            .delay(DELAY_TIME, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
             .subscribe({
+                view.dismissLoading()
 
                 view.showLaunches(it.toMutableList())
 
             }, {
+                view.dismissLoading()
 
-                // TODO
-                Log.e("ozi", it.message)
+                view.showErrorMessage(it.message)
 
             }))
     }

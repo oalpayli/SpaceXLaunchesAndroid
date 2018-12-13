@@ -60,7 +60,7 @@ data class LaunchDbModel (
     val launchSite: LaunchSiteModel?,
 
     @SerializedName("launch_success")
-    val launchSuccess: Boolean?,
+    val launchSuccess: Boolean = false,
 
     @SerializedName("launch_failure_details")
     @Embedded
