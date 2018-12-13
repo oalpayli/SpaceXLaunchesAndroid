@@ -13,6 +13,9 @@ interface LaunchDao {
     @Query("SELECT * FROM Launch")
     fun findAllLaunch() : Single<MutableList<LaunchDbModel>>
 
+    @Query("SELECT * FROM Launch WHERE flightNumber = :flightNumber")
+    fun findLaunch(flightNumber: Long) : Single<LaunchDbModel>
+
     @Query("SELECT * FROM Launch ORDER BY launchDateUtc ASC")
     fun findLaunchByDate() : Single<MutableList<LaunchDbModel>>
 

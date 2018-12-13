@@ -4,16 +4,18 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ceng.ozi.spacexlaunchesandroid.R
 import com.ceng.ozi.spacexlaunchesandroid.adapter.MainAdapter
 import com.ceng.ozi.spacexlaunchesandroid.app.SpaceXLaunchesApplication
 import com.ceng.ozi.spacexlaunchesandroid.app.db.launch.LaunchDbModel
+import com.ceng.ozi.spacexlaunchesandroid.ext.Constants
+import com.ceng.ozi.spacexlaunchesandroid.ext.ItemClickSupport
 import com.ceng.ozi.spacexlaunchesandroid.presenter.MainPresenter
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainPresenter.MainView {
-
+class MainActivity : BaseActivity(), MainPresenter.MainView, ItemClickSupport.OnItemClickListener {
 
     /**
      *  Views
@@ -33,19 +35,27 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
         (application as SpaceXLaunchesApplication).component.inject(this)
         setContentView(R.layout.activity_main)
         presenter.injectView(this, this)
-        initUi()
-    }
 
-    override fun onStart() {
-        super.onStart()
+        initUi()
 
         presenter.getLaunches()
     }
+
 
     override fun onDestroy() {
         presenter.onDestroy()
         super.onDestroy()
     }
+
+    // region ACTIONS
+
+    override fun onItemClicked(recyclerView: RecyclerView?, position: Int, v: View?) {
+        val bundle = Bundle()
+        bundle.putLong(Constants.BUNDLE_EXTRA_FLIGHT_NUMBER, adapter!!.getItem(position).flightNumber!!)
+        startDetailActivity(bundle)
+    }
+
+    // endregion
 
 
     // region OVERRIDES
@@ -54,6 +64,8 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
         recyclerView_MainActivity.layoutManager = LinearLayoutManager(this)
         adapter = MainAdapter(this)
         recyclerView_MainActivity.adapter = adapter
+
+        ItemClickSupport.addTo(recyclerView_MainActivity).setOnItemClickListener(this)
     }
 
     override fun showLaunches(launches: MutableList<LaunchDbModel>) {

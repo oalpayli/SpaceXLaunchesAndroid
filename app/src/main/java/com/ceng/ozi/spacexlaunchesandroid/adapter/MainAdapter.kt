@@ -61,6 +61,10 @@ class MainAdapter(val context: Context) : RecyclerView.Adapter<MainAdapter.MainV
         notifyDataSetChanged()
     }
 
+    fun getItem(pos: Int): LaunchDbModel {
+        return launches[pos]
+    }
+
     // endregion
 
 
